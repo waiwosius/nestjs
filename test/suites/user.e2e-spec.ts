@@ -4,19 +4,27 @@ import { CreateUserRequest } from '../../src/modules/user/requests/create-user.r
 import supertest from 'supertest';
 import { User } from '../../src/modules/user/user.entity';
 import { getMainModule } from '../app';
+import { TestDatabaseService } from '../test-database.service';
 
 describe('/user', () => {
   let app: INestApplication;
   let module: TestingModule;
+  let testDatabaseService: TestDatabaseService;
 
   beforeAll(async () => {
     module = await getMainModule();
-    app = module.createNestApplication();
+    testDatabaseService = module.get<TestDatabaseService>(TestDatabaseService);
 
+    app = module.createNestApplication();
     await app.init();
   });
 
+  beforeEach(async () => {
+    await testDatabaseService.cleanDatabase();
+  });
+
   afterAll(async () => {
+    await testDatabaseService.closeDatabaseConnection();
     await app.close();
   });
 
@@ -52,8 +60,8 @@ describe('/user', () => {
         .expect(201);
 
       const result = response.body as User;
-      expect(result.firstName).toBeUndefined();
-      expect(result.lastName).toBeUndefined();
+      expect(result.firstName).toBeNull();
+      expect(result.lastName).toBeNull();
       expect(result.email).toBe(request.email);
     });
 
