@@ -43,7 +43,7 @@ export class UserService {
     const user = await this.findOneOrFail(userId);
     const { firstName, lastName } = request;
 
-    return await this.userRepository.save(
+    return this.userRepository.save(
       user.setFirstName(firstName).setLastName(lastName),
     );
   }
