@@ -28,6 +28,7 @@ export class AuthenticationService {
     if (!isEqual) {
       throw new BadRequestException('Wrong password');
     }
+    return true;
   }
 
   /**

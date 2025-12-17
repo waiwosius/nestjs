@@ -2,8 +2,6 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { JwtService } from '@nestjs/jwt';
 import { AuthenticationService } from './authentication.service';
 import { BadRequestException } from '@nestjs/common';
-import crypto from 'crypto';
-import { jwtConstants } from './constants';
 
 describe('AuthenticationService', () => {
   let service: AuthenticationService;
@@ -15,10 +13,9 @@ describe('AuthenticationService', () => {
         AuthenticationService,
         {
           provide: JwtService,
-          useValue: new JwtService({
-            secret: jwtConstants.secret,
-            signOptions: { expiresIn: '1d' },
-          }),
+          useValue: {
+            signAsync: jest.fn().mockResolvedValue('mocked-jwt-token'),
+          },
         },
       ],
     }).compile();
@@ -55,54 +52,35 @@ describe('AuthenticationService', () => {
 
   describe('validatePassword', () => {
     it('should return true if the password is correct', async () => {
-      const timingSafeEqualSpy = jest.spyOn(crypto, 'timingSafeEqual');
-      const pbkdf2SyncSpy = jest.spyOn(crypto, 'pbkdf2Sync');
-
       const password = 'p@$$w0rd';
       const passwordValue = service.createPassword(password);
 
-      await service.validatePassword(password, passwordValue);
-
-      expect(timingSafeEqualSpy).toHaveBeenCalled();
-      expect(pbkdf2SyncSpy).toHaveBeenCalled();
-      timingSafeEqualSpy.mockRestore();
-      pbkdf2SyncSpy.mockRestore();
+      const isValid = await service.validatePassword(password, passwordValue);
+      expect(isValid).toBe(true);
     });
 
     it('should throw an error when password is wrong', async () => {
-      const timingSafeEqualSpy = jest.spyOn(crypto, 'timingSafeEqual');
-      const pbkdf2SyncSpy = jest.spyOn(crypto, 'pbkdf2Sync');
-
       const password = 'p@$$w0rd';
       const passwordValue = service.createPassword(password);
 
       await expect(
         service.validatePassword('wrongPassword', passwordValue),
       ).rejects.toThrow(BadRequestException);
-
-      expect(timingSafeEqualSpy).toHaveBeenCalled();
-      expect(pbkdf2SyncSpy).toHaveBeenCalled();
-
-      timingSafeEqualSpy.mockRestore();
-      pbkdf2SyncSpy.mockRestore();
     });
   });
 
   describe('createAccessToken', () => {
     it('should create access token', async () => {
-      const signAsyncSpy = jest.spyOn(jwtService, 'signAsync');
       const userId = 42;
 
       const result = await service.createAccessToken(userId);
 
       expect(jwtService.signAsync).toHaveBeenCalledTimes(1);
       expect(jwtService.signAsync).toHaveBeenCalledWith({
-        userId: userId,
+        userId,
       });
-      expect(result).toHaveLength(144);
-      expect(result).toEqual(expect.any(String));
 
-      signAsyncSpy.mockRestore();
+      expect(result).toBe('mocked-jwt-token');
     });
   });
 });

@@ -1,10 +1,14 @@
-import { Body, Controller, Delete, Get, Param, Put } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Put, UseGuards, } from '@nestjs/common';
 import { UserService } from './user.service';
 import { UserRepository } from './user.repository';
 import { UpdateUserRequest } from './requests/update-user.request';
 import { Serialize } from '../../interseptors/serialize.interceptor';
 import { UserDto } from './user.dto';
+import { AuthenticationGuard } from '../../guards/authentication-guard.service';
+import { CurrentUser } from '../../decorators/current-user.decorator';
+import { User } from './user.entity';
 
+@UseGuards(AuthenticationGuard)
 @Controller('user')
 export class UserController {
   constructor(
@@ -16,6 +20,12 @@ export class UserController {
   @Get()
   async getAll() {
     return await this.userRepository.findAll();
+  }
+
+  @Serialize(UserDto)
+  @Get('/profile')
+  async getProfile(@CurrentUser() user: User) {
+    return await this.userService.findOneOrFail(user.id);
   }
 
   @Serialize(UserDto)
