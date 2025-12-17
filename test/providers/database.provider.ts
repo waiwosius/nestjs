@@ -1,7 +1,7 @@
 import { ConfigService } from '@nestjs/config';
 import { DataSource, DataSourceOptions } from 'typeorm';
 import { FactoryProvider } from '@nestjs/common';
-import { typeormModuleOptions } from '../src/database/database.provider';
+import { typeormModuleOptions } from '../../src/database/database.provider';
 
 export const typeormTestOptions: FactoryProvider = {
   provide: DataSource,

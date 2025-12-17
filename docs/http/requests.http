@@ -1,11 +1,20 @@
 ### Create a new user
-POST http://localhost:3000/user
+POST http://localhost:3000/authentication/sign-up
 Content-Type:application/json
 
 {
   "firstName": "Bobby",
   "lastName": "Ross",
-  "email": "bob@ross.com",
+  "email": "bob@ross6.com",
+  "password": "12345678"
+}
+
+### Sign In user
+POST http://localhost:3000/authentication/sign-in
+Content-Type:application/json
+
+{
+  "email": "bob@ross6.com",
   "password": "12345678"
 }
 
@@ -13,10 +22,10 @@ Content-Type:application/json
 GET http://localhost:3000/user
 
 ### Get user by ID
-GET http://localhost:3000/user/5
+GET http://localhost:3000/user/8
 
 ### Update user
-PUT http://localhost:3000/user/6
+PUT http://localhost:3000/user/8
 Content-Type:application/json
 
 {
@@ -25,4 +34,4 @@ Content-Type:application/json
 }
 
 ### Delete user
-DELETE http://localhost:3000/user/9
+DELETE http://localhost:3000/user/8

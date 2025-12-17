@@ -1,13 +1,4 @@
-import {
-  Body,
-  Controller,
-  Delete,
-  Get,
-  Param,
-  Post,
-  Put,
-} from '@nestjs/common';
-import { CreateUserRequest } from './requests/create-user.request';
+import { Body, Controller, Delete, Get, Param, Put } from '@nestjs/common';
 import { UserService } from './user.service';
 import { UserRepository } from './user.repository';
 import { UpdateUserRequest } from './requests/update-user.request';
@@ -31,12 +22,6 @@ export class UserController {
   @Get(':id')
   async getOne(@Param('id') userId: number) {
     return await this.userService.findOneOrFail(userId);
-  }
-
-  @Serialize(UserDto)
-  @Post()
-  async create(@Body() body: CreateUserRequest) {
-    return await this.userService.create(body);
   }
 
   @Serialize(UserDto)
