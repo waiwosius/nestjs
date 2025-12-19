@@ -1,20 +1,12 @@
-import {
-  BadRequestException,
-  Injectable,
-  NotFoundException,
-} from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException, } from '@nestjs/common';
 import { User } from './user.entity';
 import { CreateUserRequest } from '../authentication/requests/create-user.request';
 import { UserRepository } from './user.repository';
-import { AuthenticationService } from '../authentication/authentication.service';
 import { UpdateUserRequest } from './requests/update-user.request';
 
 @Injectable()
 export class UserService {
-  constructor(
-    private readonly userRepository: UserRepository,
-    private readonly authenticationService: AuthenticationService,
-  ) {}
+  constructor(private readonly userRepository: UserRepository) {}
 
   async findOneOrFail(userId: number) {
     const user = await this.userRepository.findById(userId);
@@ -36,8 +28,8 @@ export class UserService {
     return user;
   }
 
-  async create(request: CreateUserRequest) {
-    const { firstName, lastName, email, password } = request;
+  async create(request: CreateUserRequest, hashPassword: string) {
+    const { firstName, lastName, email } = request;
 
     const user = await this.userRepository.findByEmail(email);
     if (user) {
@@ -49,7 +41,7 @@ export class UserService {
         .setFirstName(firstName)
         .setLastName(lastName)
         .setEmail(email)
-        .setPassword(this.authenticationService.createPassword(password)),
+        .setPassword(hashPassword),
     );
   }
 

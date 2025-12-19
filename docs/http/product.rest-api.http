@@ -1,0 +1,30 @@
+### Create a new product
+POST {{url}}/product
+Content-Type:application/json
+Authorization: Bearer {{accessToken}}
+
+{
+  "title": "Product 1",
+  "description": "Product 1 - best product in the market",
+  "number": "16"
+}
+
+### Get product by ID
+GET {{url}}/product/2
+Authorization: Bearer {{accessToken}}
+
+### Update a product
+PUT {{url}}/product/2
+Content-Type:application/json
+Authorization: Bearer {{accessToken}}
+
+{
+  "title": "Product 1.1",
+  "description": "Product 1.1 - best product in the market",
+  "number": "18"
+}
+
+### Delete a product
+DELETE {{url}}/product/1
+Authorization: Bearer {{accessToken}}
+
