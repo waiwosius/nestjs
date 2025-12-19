@@ -55,10 +55,10 @@ export class UserService {
 
   async update(userId: number, request: UpdateUserRequest) {
     const user = await this.findOneOrFail(userId);
-    const { firstName, lastName } = request;
+    const { firstName, lastName, role } = request;
 
     return this.userRepository.save(
-      user.setFirstName(firstName).setLastName(lastName),
+      user.setFirstName(firstName).setLastName(lastName).setRole(role),
     );
   }
 

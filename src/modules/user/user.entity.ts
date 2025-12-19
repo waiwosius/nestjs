@@ -1,4 +1,11 @@
-import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn, } from 'typeorm';
+import {
+  Column,
+  CreateDateColumn,
+  Entity,
+  PrimaryGeneratedColumn,
+  UpdateDateColumn,
+} from 'typeorm';
+import { UserRole } from './user-role.enum';
 
 @Entity()
 export class User {
@@ -23,6 +30,13 @@ export class User {
   @Column()
   password: string;
 
+  @Column({
+    type: 'varchar',
+    length: 50,
+    default: UserRole.user,
+  })
+  role: UserRole;
+
   setFirstName(firstName: string) {
     this.firstName = firstName;
     return this;
@@ -40,6 +54,11 @@ export class User {
 
   setPassword(password: string) {
     this.password = password;
+    return this;
+  }
+
+  setRole(role: UserRole) {
+    this.role = role;
     return this;
   }
 }

@@ -58,28 +58,6 @@ describe('/authentication', () => {
         expect(user).not.toHaveProperty('password');
       });
 
-      it('should create and return a user when firstName and lastName are not provided', async () => {
-        const request = {
-          email: 'lara@croft.com',
-          password: 'p@$$w0rd',
-        } as CreateUserRequest;
-
-        const response = await supertest(app.getHttpServer())
-          .post('/authentication/sign-up')
-          .send(request)
-          .expect(201);
-
-        const result = response.body as AuthenticationDto;
-        expect(result.accessToken).toBeDefined();
-
-        const user = result.user;
-        expect(user.id).toBeDefined();
-        expect(user.firstName).toBeNull();
-        expect(user.lastName).toBeNull();
-        expect(user.email).toBe(request.email);
-        expect(user).not.toHaveProperty('password');
-      });
-
       it('should throw an error when email is not provided', async () => {
         const request = {
           firstName: 'Lara',

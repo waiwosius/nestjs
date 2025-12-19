@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { TestServiceInterface } from './test-service.interface';
 import { User } from '../../src/modules/user/user.entity';
 import { TestDatabaseService } from './test-database.service';
+import { UserRole } from '../../src/modules/user/user-role.enum';
 
 @Injectable()
 export class UserTestService implements TestServiceInterface {
@@ -18,13 +19,15 @@ export class UserTestService implements TestServiceInterface {
       email = 'lara@croft.com',
       //password: 'p@$$w0rd'
       password = '567fb3927bbc7421a4c83b3cd825a773.f2b0e1a852331dff676e097154355cb563a54e51dd1bd7ebdd29eb2490b2d6463b6f8a20aeb5d5c2304b23d45522c494a964c76d33bbffc74447c9bd78f6dbe9',
+      role = UserRole.admin,
     } = params;
 
     return new User()
       .setFirstName(firstName)
       .setLastName(lastName)
       .setEmail(email)
-      .setPassword(password);
+      .setPassword(password)
+      .setRole(role);
   }
 
   repository() {
