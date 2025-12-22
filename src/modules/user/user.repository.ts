@@ -2,37 +2,25 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Injectable } from '@nestjs/common';
 import { User } from './user.entity';
 import { Repository } from 'typeorm';
+import { AbstractRepositoryService } from '../../common/abstract-repository.service';
 
 @Injectable()
-export class UserRepository {
+export class UserRepository extends AbstractRepositoryService<User> {
   constructor(
     @InjectRepository(User)
-    private readonly repository: Repository<User>,
-  ) {}
-
-  findAll() {
-    return this.repository.createQueryBuilder('user').getMany();
+    protected readonly repository: Repository<User>,
+  ) {
+    super(repository, 'user');
   }
 
-  findById(id: number) {
-    return this.repository
-      .createQueryBuilder('user')
-      .where('id = :id', { id })
-      .getOne();
+  findAll() {
+    return this.repository.createQueryBuilder(this.alias).getMany();
   }
 
   findByEmail(email: string) {
     return this.repository
-      .createQueryBuilder('user')
+      .createQueryBuilder(this.alias)
       .where('email = :email', { email })
       .getOne();
-  }
-
-  save(entity: User) {
-    return this.repository.save(entity);
-  }
-
-  delete(id: number) {
-    return this.repository.delete(id);
   }
 }

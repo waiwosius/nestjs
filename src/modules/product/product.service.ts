@@ -1,20 +1,13 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { ProductRequest } from './requests/product.request';
 import { Product } from './product.entity';
 import { ProductRepository } from './product.repository';
+import { AbstractEntityService } from '../../common/abstract-entity.service';
 
 @Injectable()
-export class ProductService {
-  constructor(private readonly productRepository: ProductRepository) {}
-
-  async findOneOrFail(productId: number) {
-    const product = await this.productRepository.findById(productId);
-
-    if (!product) {
-      throw new NotFoundException('Product not found');
-    }
-
-    return product;
+export class ProductService extends AbstractEntityService<Product> {
+  constructor(private readonly productRepository: ProductRepository) {
+    super(productRepository, 'Product');
   }
 
   create(request: ProductRequest) {
@@ -35,11 +28,5 @@ export class ProductService {
     return await this.productRepository.save(
       product.setNumber(number).setTitle(title).setDescription(description),
     );
-  }
-
-  async delete(productId: number) {
-    const product = await this.findOneOrFail(productId);
-
-    await this.productRepository.delete(product.id);
   }
 }

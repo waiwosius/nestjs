@@ -1,25 +1,14 @@
-import {
-  BadRequestException,
-  Injectable,
-  NotFoundException,
-} from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException, } from '@nestjs/common';
 import { User } from './user.entity';
 import { CreateUserRequest } from '../authentication/requests/create-user.request';
 import { UserRepository } from './user.repository';
 import { UpdateUserRequest } from './requests/update-user.request';
+import { AbstractEntityService } from '../../common/abstract-entity.service';
 
 @Injectable()
-export class UserService {
-  constructor(private readonly userRepository: UserRepository) {}
-
-  async findOneOrFail(userId: number) {
-    const user = await this.userRepository.findById(userId);
-
-    if (!user) {
-      throw new NotFoundException('User not found');
-    }
-
-    return user;
+export class UserService extends AbstractEntityService<User> {
+  constructor(private readonly userRepository: UserRepository) {
+    super(userRepository, 'User');
   }
 
   async findByEmailOrFail(email: string) {
@@ -40,7 +29,7 @@ export class UserService {
       throw new BadRequestException('Email already exists');
     }
 
-    return await this.userRepository.save(
+    return this.userRepository.save(
       new User()
         .setFirstName(firstName)
         .setLastName(lastName)
@@ -56,11 +45,5 @@ export class UserService {
     return this.userRepository.save(
       user.setFirstName(firstName).setLastName(lastName).setRole(role),
     );
-  }
-
-  async delete(userId: number) {
-    const user = await this.findOneOrFail(userId);
-
-    await this.userRepository.delete(user.id);
   }
 }

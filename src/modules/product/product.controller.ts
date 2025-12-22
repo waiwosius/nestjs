@@ -6,7 +6,7 @@ import { RolesGuard } from '../../guards/roles.guard';
 import { ProductRequest } from './requests/product.request';
 import { ProductService } from './product.service';
 import { ProductDto } from './product.dto';
-import { Serialize } from '../../interseptors/serialize.interceptor';
+import { Serialize } from '../../interceptors/serialize.interceptor';
 
 @Roles(UserRole.admin)
 @UseGuards(AuthenticationGuard, RolesGuard)
