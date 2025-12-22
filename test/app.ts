@@ -4,11 +4,12 @@ import { DataSource } from 'typeorm';
 import { typeormTestOptions } from './providers/database.provider';
 import { TestDatabaseService } from './services/test-database.service';
 import { UserTestService } from './services/user-test.service';
+import { ProductTestService } from './services/product-test.service';
 
 export const getMainModule = async (): Promise<TestingModule> => {
   return Test.createTestingModule({
     imports: [AppModule],
-    providers: [TestDatabaseService, UserTestService],
+    providers: [TestDatabaseService, UserTestService, ProductTestService],
   })
     .overrideProvider(DataSource)
     .useFactory({
