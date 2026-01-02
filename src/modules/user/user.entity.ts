@@ -9,56 +9,87 @@ import { UserRole } from './user-role.enum';
 
 @Entity()
 export class User {
-  @PrimaryGeneratedColumn()
-  id: number;
+  @PrimaryGeneratedColumn({ name: 'id' })
+  private _id: number;
 
-  @CreateDateColumn()
-  createdDate: Date;
+  @CreateDateColumn({ name: 'created_date' })
+  private _createdDate: Date;
 
-  @UpdateDateColumn()
-  updatedDate: Date;
+  @UpdateDateColumn({ name: 'updated_date' })
+  private _updatedDate: Date;
 
-  @Column({ nullable: true })
-  firstName: string;
+  @Column({ name: 'first_name', nullable: true })
+  private _firstName: string;
 
-  @Column({ nullable: true })
-  lastName: string;
+  @Column({ name: 'last_name', nullable: true })
+  private _lastName: string;
 
-  @Column()
-  email: string;
+  @Column({ name: 'email' })
+  private _email: string;
 
-  @Column()
-  password: string;
+  @Column({ name: 'password' })
+  private _password: string;
 
   @Column({
+    name: 'role',
     type: 'varchar',
     length: 50,
     default: UserRole.user,
   })
-  role: UserRole;
+  private _role: UserRole;
+
+  get id(): number {
+    return this._id;
+  }
+
+  get createdDate(): Date {
+    return this._createdDate;
+  }
+
+  get updatedDate(): Date {
+    return this._updatedDate;
+  }
+  get firstName(): string {
+    return this._firstName;
+  }
+  get lastName(): string {
+    return this._lastName;
+  }
+
+  get email(): string {
+    return this._email;
+  }
+
+  get password(): string {
+    return this._password;
+  }
+
+  get role(): UserRole {
+    return this._role;
+  }
 
   setFirstName(firstName: string) {
-    this.firstName = firstName;
+    this._firstName = firstName;
     return this;
   }
 
   setLastName(lastName: string) {
-    this.lastName = lastName;
+    this._lastName = lastName;
     return this;
   }
 
   setEmail(email: string) {
-    this.email = email;
+    this._email = email;
     return this;
   }
 
   setPassword(password: string) {
-    this.password = password;
+    this._password = password;
     return this;
   }
 
   setRole(role: UserRole) {
-    this.role = role;
+    this._role = role;
     return this;
   }
 }
