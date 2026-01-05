@@ -1,4 +1,4 @@
-import { Repository } from 'typeorm';
+import { QueryRunner, Repository } from 'typeorm';
 
 export abstract class AbstractRepositoryService<T> {
   protected constructor(
@@ -24,5 +24,9 @@ export abstract class AbstractRepositoryService<T> {
 
   delete(id: number) {
     return this.repository.delete(id);
+  }
+
+  createQueryBuilder(queryRunner?: QueryRunner) {
+    return this.repository.createQueryBuilder(this.alias, queryRunner);
   }
 }

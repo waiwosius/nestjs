@@ -5,10 +5,10 @@ import {
   Get,
   Param,
   Put,
+  Query,
   UseGuards,
 } from '@nestjs/common';
 import { UserService } from './user.service';
-import { UserRepository } from './user.repository';
 import { UpdateUserRequest } from './requests/update-user.request';
 import { AuthenticationGuard } from '../../guards/authentication.guard';
 import { CurrentUser } from '../../decorators/current-user.decorator';
@@ -19,20 +19,36 @@ import { RolesGuard } from '../../guards/roles.guard';
 import { PublicUserDto } from './public-user.dto';
 import { UserDto } from './user.dto';
 import { Serialize } from '../../interceptors/serialize.interceptor';
+import { UserSearchRepository } from './user-search.repository';
+import { UserSearchRequest } from './requests/user-search.request';
+import { PageSerialize } from '../../interceptors/page-serialize.interceptor';
 
 @UseGuards(AuthenticationGuard, RolesGuard)
 @Controller('user')
 export class UserController {
   constructor(
     private readonly userService: UserService,
-    private readonly userRepository: UserRepository,
+    private readonly userSearchRepository: UserSearchRepository,
   ) {}
 
   @Roles(UserRole.admin)
-  @Serialize(UserDto)
+  @PageSerialize(UserDto)
   @Get()
-  async getAll() {
-    return await this.userRepository.findAll();
+  async search(@Query() query: UserSearchRequest) {
+    const { limit, offset, search } = query;
+
+    const [users, total] = await this.userSearchRepository.search({
+      limit,
+      offset,
+      search,
+    });
+
+    return {
+      items: users,
+      total,
+      limit,
+      offset,
+    };
   }
 
   @Serialize(PublicUserDto)
