@@ -6,6 +6,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { typeormModuleOptions } from './database/database.provider';
 import { AuthenticationModule } from './modules/authentication/authentication.module';
 import { JwtModule } from '@nestjs/jwt';
+import { ProductModule } from './modules/product/product.module';
 
 @Module({
   imports: [
@@ -18,6 +19,7 @@ import { JwtModule } from '@nestjs/jwt';
     }),
     UserModule,
     AuthenticationModule,
+    ProductModule,
   ],
   controllers: [],
   providers: [GlobalValidationPipeProvider],

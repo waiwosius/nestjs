@@ -16,7 +16,10 @@ export class AuthenticationController {
   @Serialize(AuthenticationDto)
   @Post('/sign-up')
   async create(@Body() body: CreateUserRequest) {
-    const user = await this.userService.create(body);
+    const hashedPassword = this.authenticationService.createPassword(
+      body.password,
+    );
+    const user = await this.userService.create(body, hashedPassword);
 
     return {
       user,
