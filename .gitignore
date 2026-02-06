@@ -1,9 +1,9 @@
-# Editor
-.idea
-
-# Modules
-node_modules
-
-# Local
+# Nest.js
 .env
-dist
+
+# Node
+node_modules/
+dist/
+
+# Editor
+.idea/
