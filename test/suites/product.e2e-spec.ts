@@ -201,7 +201,7 @@ describe('/product', () => {
 
       const token = await getAccessToken(app, user.email);
       await supertest(app.getHttpServer())
-        .put(`/product/${product.id + 1}`)
+        .put(`/product/${product.id}`)
         .send(request)
         .set('Authorization', `Bearer ${token}`)
         .expect(403);

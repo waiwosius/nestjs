@@ -1,0 +1,35 @@
+### Create a new category
+POST {{url}}/category
+Content-Type:application/json
+Authorization: Bearer {{accessToken}}
+
+{
+  "title": "Category 2",
+  "description": "Second level category",
+  "order": 2,
+  "parentId": 1
+}
+
+### Get all categories
+GET {{url}}/category
+Authorization: Bearer {{accessToken}}
+
+### Get category by ID
+GET {{url}}/category/3
+Authorization: Bearer {{accessToken}}
+
+### Update a category
+PUT {{url}}/category/3
+Content-Type:application/json
+Authorization: Bearer {{accessToken}}
+
+{
+  "title": "Category 2",
+  "description": "Second level category",
+  "order": 1,
+  "parentId": 2
+}
+
+### Delete a category
+DELETE {{url}}/category/1
+Authorization: Bearer {{accessToken}}

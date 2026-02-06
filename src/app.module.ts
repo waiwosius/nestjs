@@ -7,6 +7,7 @@ import { typeormModuleOptions } from './database/database.provider';
 import { AuthenticationModule } from './modules/authentication/authentication.module';
 import { JwtModule } from '@nestjs/jwt';
 import { ProductModule } from './modules/product/product.module';
+import { CategoryModule } from './modules/category/category.module';
 
 @Module({
   imports: [
@@ -20,6 +21,7 @@ import { ProductModule } from './modules/product/product.module';
     UserModule,
     AuthenticationModule,
     ProductModule,
+    CategoryModule,
   ],
   controllers: [],
   providers: [GlobalValidationPipeProvider],

@@ -1,4 +1,5 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, ManyToMany, PrimaryGeneratedColumn } from 'typeorm';
+import { Category } from '../category/category.entity';
 
 @Entity()
 export class Product {
@@ -19,6 +20,9 @@ export class Product {
 
   @Column({ name: 'number', nullable: true })
   private _number: string;
+
+  @ManyToMany(() => Category, (category) => category.products)
+  categories: Category[];
 
   get id(): number {
     return this._id;
