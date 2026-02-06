@@ -1,8 +1,15 @@
-import { Body, Controller, Delete, Get, Param, Put, UseGuards, } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Put,
+  UseGuards,
+} from '@nestjs/common';
 import { UserService } from './user.service';
 import { UserRepository } from './user.repository';
 import { UpdateUserRequest } from './requests/update-user.request';
-import { Serialize } from '../../interseptors/serialize.interceptor';
 import { AuthenticationGuard } from '../../guards/authentication.guard';
 import { CurrentUser } from '../../decorators/current-user.decorator';
 import { User } from './user.entity';
@@ -11,6 +18,7 @@ import { UserRole } from './user-role.enum';
 import { RolesGuard } from '../../guards/roles.guard';
 import { PublicUserDto } from './public-user.dto';
 import { UserDto } from './user.dto';
+import { Serialize } from '../../interceptors/serialize.interceptor';
 
 @UseGuards(AuthenticationGuard, RolesGuard)
 @Controller('user')
@@ -49,7 +57,7 @@ export class UserController {
 
   @Roles(UserRole.admin)
   @Delete(':id')
-  async delete(@Param('id') userId: number) {
+  delete(@Param('id') userId: number) {
     return this.userService.delete(userId);
   }
 }

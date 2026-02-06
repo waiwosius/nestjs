@@ -1,6 +1,6 @@
 import { Body, Controller, HttpCode, HttpStatus, Post } from '@nestjs/common';
 import { AuthenticationService } from './authentication.service';
-import { Serialize } from '../../interseptors/serialize.interceptor';
+import { Serialize } from '../../interceptors/serialize.interceptor';
 import { CreateUserRequest } from './requests/create-user.request';
 import { UserService } from '../user/user.service';
 import { SignInUserRequest } from './requests/sign-in-user.request';

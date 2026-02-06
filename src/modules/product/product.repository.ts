@@ -2,26 +2,14 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Product } from './product.entity';
+import { AbstractRepositoryService } from '../../common/abstract-repository.service';
 
 @Injectable()
-export class ProductRepository {
+export class ProductRepository extends AbstractRepositoryService<Product> {
   constructor(
     @InjectRepository(Product)
-    private readonly repository: Repository<Product>,
-  ) {}
-
-  findById(id: number) {
-    return this.repository
-      .createQueryBuilder('product')
-      .where('id = :id', { id })
-      .getOne();
-  }
-
-  save(entity: Product) {
-    return this.repository.save(entity);
-  }
-
-  delete(id: number) {
-    return this.repository.delete(id);
+    protected readonly repository: Repository<Product>,
+  ) {
+    super(repository, 'product');
   }
 }
