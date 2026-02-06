@@ -1,9 +1,13 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { DataSource, EntityMetadata } from 'typeorm';
+import { DataSource, EntityMetadata, EntityTarget, Repository } from 'typeorm';
 
 @Injectable()
 export class TestDatabaseService {
   constructor(@Inject(DataSource) public dataSource: DataSource) {}
+
+  getRepository<T>(target: EntityTarget<T>): Repository<T> {
+    return this.dataSource.getRepository(target);
+  }
 
   async closeDatabaseConnection() {
     if (this.dataSource.isInitialized) {

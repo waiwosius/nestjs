@@ -1,4 +1,8 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { User } from './user.entity';
 import { CreateUserRequest } from './requests/create-user.request';
 import { UserRepository } from './user.repository';
@@ -16,7 +20,7 @@ export class UserService {
     const user = await this.userRepository.findById(userId);
 
     if (!user) {
-      throw new BadRequestException('User not found');
+      throw new NotFoundException('User not found');
     }
 
     return user;
