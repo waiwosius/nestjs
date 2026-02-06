@@ -1,17 +1,9 @@
-import {
-  Body,
-  Controller,
-  Delete,
-  Get,
-  Param,
-  Put,
-  UseGuards,
-} from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Put, UseGuards, } from '@nestjs/common';
 import { UserService } from './user.service';
 import { UserRepository } from './user.repository';
 import { UpdateUserRequest } from './requests/update-user.request';
 import { Serialize } from '../../interseptors/serialize.interceptor';
-import { AuthenticationGuard } from '../../guards/authentication-guard.service';
+import { AuthenticationGuard } from '../../guards/authentication.guard';
 import { CurrentUser } from '../../decorators/current-user.decorator';
 import { User } from './user.entity';
 import { Roles } from '../../decorators/roles.decorator';
