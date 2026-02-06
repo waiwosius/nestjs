@@ -13,10 +13,6 @@ export class UserRepository extends AbstractRepositoryService<User> {
     super(repository, 'user');
   }
 
-  findAll() {
-    return this.repository.createQueryBuilder(this.alias).getMany();
-  }
-
   findByEmail(email: string) {
     return this.repository
       .createQueryBuilder(this.alias)

@@ -2,7 +2,7 @@
 GET {{url}}/user/profile
 Authorization: Bearer {{accessToken}}
 
-### Get all users
+### Search users
 GET {{url}}/user
 Authorization: Bearer {{accessToken}}
 

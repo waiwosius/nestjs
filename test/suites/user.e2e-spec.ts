@@ -9,6 +9,7 @@ import { UpdateUserRequest } from '../../src/modules/user/requests/update-user.r
 import { getAccessToken } from '../test-utils';
 import { UserRole } from '../../src/modules/user/user-role.enum';
 import { PublicUserDto } from '../../src/modules/user/public-user.dto';
+import { PageDto } from '../../src/dtos/page.dto';
 
 describe('/user', () => {
   let app: INestApplication;
@@ -45,8 +46,27 @@ describe('/user', () => {
         .set('Authorization', `Bearer ${token}`)
         .expect(200);
 
-      const result = response.body as UserDto[];
-      expect(result.length).toBe(2);
+      const result = response.body as PageDto<UserDto>;
+      expect(result.total).toBe(2);
+    });
+
+    it('should allow admin to search user by name', async () => {
+      const user = await userTestService.create();
+      const user2 = await userTestService.create({
+        firstName: 'Indiana',
+        email: 'indiana@jones.com',
+      });
+
+      const token = await getAccessToken(app, user.email);
+      const response = await supertest(app.getHttpServer())
+        .get(`/user?limit=1&offset=0&search=${user2.firstName}`)
+        .set('Authorization', `Bearer ${token}`)
+        .expect(200);
+
+      const result = response.body as PageDto<UserDto>;
+      expect(result.total).toBe(1);
+      expect(result.items[0].id).toBe(user2.id);
+      expect(result.items[0].email).toBe(user2.email);
     });
 
     it('should forbid non-admin from retrieving all users', async () => {
