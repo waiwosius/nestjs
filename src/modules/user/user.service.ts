@@ -4,9 +4,9 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { User } from './user.entity';
-import { CreateUserRequest } from './requests/create-user.request';
+import { CreateUserRequest } from '../authentication/requests/create-user.request';
 import { UserRepository } from './user.repository';
-import { AuthenticationService } from './authentication.service';
+import { AuthenticationService } from '../authentication/authentication.service';
 import { UpdateUserRequest } from './requests/update-user.request';
 
 @Injectable()
@@ -18,6 +18,16 @@ export class UserService {
 
   async findOneOrFail(userId: number) {
     const user = await this.userRepository.findById(userId);
+
+    if (!user) {
+      throw new NotFoundException('User not found');
+    }
+
+    return user;
+  }
+
+  async findByEmailOrFail(email: string) {
+    const user = await this.userRepository.findByEmail(email);
 
     if (!user) {
       throw new NotFoundException('User not found');
@@ -39,7 +49,7 @@ export class UserService {
         .setFirstName(firstName)
         .setLastName(lastName)
         .setEmail(email)
-        .setPassword(this.authenticationService.hashPassword(password)),
+        .setPassword(this.authenticationService.createPassword(password)),
     );
   }
 

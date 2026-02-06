@@ -1,6 +1,5 @@
 import { INestApplication } from '@nestjs/common';
 import { TestingModule } from '@nestjs/testing';
-import { CreateUserRequest } from '../../src/modules/user/requests/create-user.request';
 import supertest from 'supertest';
 import { getMainModule } from '../app';
 import { TestDatabaseService } from '../services/test-database.service';
@@ -30,73 +29,6 @@ describe('/user', () => {
   afterAll(async () => {
     await testDatabaseService.closeDatabaseConnection();
     await app.close();
-  });
-
-  describe('POST /user', () => {
-    it('should create and return a user', async () => {
-      const request = {
-        firstName: 'Lara',
-        lastName: 'Croft',
-        email: 'lara@croft.com',
-        password: 'p@$$w0rd',
-      } as CreateUserRequest;
-
-      const response = await supertest(app.getHttpServer())
-        .post('/user')
-        .send(request)
-        .expect(201);
-
-      const result = response.body as UserDto;
-      expect(result.firstName).toBe(request.firstName);
-      expect(result.lastName).toBe(request.lastName);
-      expect(result.email).toBe(request.email);
-      expect(result).not.toHaveProperty('password');
-    });
-
-    it('should create and return a user when firstName and lastName are not provided', async () => {
-      const request = {
-        email: 'lara@croft.com',
-        password: 'p@$$w0rd',
-      } as CreateUserRequest;
-
-      const response = await supertest(app.getHttpServer())
-        .post('/user')
-        .send(request)
-        .expect(201);
-
-      const result = response.body as UserDto;
-      expect(result.firstName).toBeNull();
-      expect(result.lastName).toBeNull();
-      expect(result.email).toBe(request.email);
-      expect(result).not.toHaveProperty('password');
-    });
-
-    it('should throw an error when email is not provided', async () => {
-      const request = {
-        firstName: 'Lara',
-        lastName: 'Croft',
-        password: 'p@$$w0rd',
-      } as CreateUserRequest;
-
-      await supertest(app.getHttpServer())
-        .post('/user')
-        .send(request)
-        .expect(400);
-    });
-
-    it('should throw an error when the password is too short', async () => {
-      const request = {
-        firstName: 'Lara',
-        lastName: 'Croft',
-        email: 'lara@croft.com',
-        password: 'p@$$',
-      } as CreateUserRequest;
-
-      await supertest(app.getHttpServer())
-        .post('/user')
-        .send(request)
-        .expect(400);
-    });
   });
 
   describe('GET /user', () => {
