@@ -4,10 +4,14 @@ Content-Type:application/json
 Authorization: Bearer {{accessToken}}
 
 {
-  "title": "Product 1",
-  "description": "Product 1 - best product in the market",
-  "number": "16"
+  "title": "Product 6",
+  "description": "Product 6 - best product in the market",
+  "number": "1251"
 }
+
+### Search product
+GET {{url}}/product
+Authorization: Bearer {{accessToken}}
 
 ### Get product by ID
 GET {{url}}/product/2

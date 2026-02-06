@@ -9,6 +9,7 @@ import { getAccessToken } from '../test-utils';
 import { UserTestService } from '../services/user-test.service';
 import supertest from 'supertest';
 import { ProductDto } from '../../src/modules/product/product.dto';
+import { PageDto } from '../../src/dtos/page.dto';
 
 describe('/product', () => {
   let app: INestApplication;
@@ -34,6 +35,50 @@ describe('/product', () => {
   afterAll(async () => {
     await testDatabaseService.closeDatabaseConnection();
     await app.close();
+  });
+
+  describe('GET /product', () => {
+    it('should allow admin to retrieve a list of all products', async () => {
+      const user = await userTestService.create();
+      await productTestService.create();
+      await productTestService.create();
+
+      const token = await getAccessToken(app, user.email);
+      const response = await supertest(app.getHttpServer())
+        .get('/product')
+        .set('Authorization', `Bearer ${token}`)
+        .expect(200);
+
+      const result = response.body as PageDto<ProductDto>;
+      expect(result.total).toBe(2);
+    });
+
+    it('should allow admin to search product by title', async () => {
+      const user = await userTestService.create();
+      const product = await productTestService.create({ title: 'Title' });
+
+      const token = await getAccessToken(app, user.email);
+      const response = await supertest(app.getHttpServer())
+        .get(`/product?limit=1&offset=0&search=${product.title}`)
+        .set('Authorization', `Bearer ${token}`)
+        .expect(200);
+
+      const result = response.body as PageDto<ProductDto>;
+      expect(result.total).toBe(1);
+      expect(result.items[0].id).toBe(product.id);
+      expect(result.items[0].title).toBe(product.title);
+    });
+
+    it('should forbid non-admin from retrieve a list of all products', async () => {
+      const user = await userTestService.create({ role: UserRole.user });
+      await productTestService.create();
+
+      const token = await getAccessToken(app, user.email);
+      const response = await supertest(app.getHttpServer())
+        .get('/product')
+        .set('Authorization', `Bearer ${token}`)
+        .expect(403);
+    });
   });
 
   describe('GET /product/:id', () => {

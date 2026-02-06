@@ -1,7 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { JwtService } from '@nestjs/jwt';
 import { AuthenticationService } from './authentication.service';
-import { BadRequestException } from '@nestjs/common';
+import { UnauthorizedException } from '@nestjs/common';
 
 describe('AuthenticationService', () => {
   let service: AuthenticationService;
@@ -65,7 +65,7 @@ describe('AuthenticationService', () => {
 
       await expect(
         service.validatePassword('wrongPassword', passwordValue),
-      ).rejects.toThrow(BadRequestException);
+      ).rejects.toThrow(UnauthorizedException);
     });
   });
 
