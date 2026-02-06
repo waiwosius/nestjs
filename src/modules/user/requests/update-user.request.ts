@@ -1,11 +1,17 @@
-import { IsOptional, IsString } from 'class-validator';
+import { IsEnum, IsNotEmpty, IsString } from 'class-validator';
+import { UserRole } from '../user-role.enum';
 
 export class UpdateUserRequest {
   @IsString()
-  @IsOptional()
+  @IsNotEmpty()
   firstName: string;
 
   @IsString()
-  @IsOptional()
+  @IsNotEmpty()
   lastName: string;
+
+  @IsEnum(UserRole)
+  @IsString()
+  @IsNotEmpty()
+  role: UserRole;
 }

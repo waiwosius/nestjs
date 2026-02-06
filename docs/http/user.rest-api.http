@@ -1,25 +1,26 @@
 ### Get current user profile
-GET http://localhost:3000/user/profile
+GET {{url}}/user/profile
 Authorization: Bearer {{accessToken}}
 
 ### Get all users
-GET http://localhost:3000/user
+GET {{url}}/user
 Authorization: Bearer {{accessToken}}
 
 ### Get user by ID
-GET http://localhost:3000/user/8
+GET {{url}}/user/8
 Authorization: Bearer {{accessToken}}
 
 ### Update user
-PUT http://localhost:3000/user/8
+PUT {{url}}/user/18
 Content-Type:application/json
 Authorization: Bearer {{accessToken}}
 
 {
-  "firstName": "Bob",
-  "lastName": "Ross"
+  "firstName": "First",
+  "lastName": "Last",
+  "role": "admin"
 }
 
 ### Delete user
-DELETE http://localhost:3000/user/8
+DELETE {{url}}/user/6
 Authorization: Bearer {{accessToken}}
