@@ -6,6 +6,7 @@ import { TestDatabaseService } from '../services/test-database.service';
 import { UserDto } from '../../src/modules/user/user.dto';
 import { UserTestService } from '../services/user-test.service';
 import { UpdateUserRequest } from '../../src/modules/user/requests/update-user.request';
+import { getAccessToken } from '../test-utils';
 
 describe('/user', () => {
   let app: INestApplication;
@@ -33,10 +34,13 @@ describe('/user', () => {
 
   describe('GET /user', () => {
     it('should return a list of all users', async () => {
-      await userTestService.create();
+      const user = await userTestService.create();
       await userTestService.create({ email: 'indiana@jones.com' });
+      const token = await getAccessToken(app, user.email);
+
       const response = await supertest(app.getHttpServer())
         .get('/user')
+        .set('Authorization', `Bearer ${token}`)
         .expect(200);
 
       const result = response.body as UserDto[];
@@ -45,8 +49,11 @@ describe('/user', () => {
 
     it('should return a user by ID', async () => {
       const user = await userTestService.create();
+      const token = await getAccessToken(app, user.email);
+
       const response = await supertest(app.getHttpServer())
         .get(`/user/${user.id}`)
+        .set('Authorization', `Bearer ${token}`)
         .expect(200);
 
       const result = response.body as UserDto;
@@ -55,9 +62,24 @@ describe('/user', () => {
 
     it('should throw an error when the user ID does not exist', async () => {
       const user = await userTestService.create();
+      const token = await getAccessToken(app, user.email);
       await supertest(app.getHttpServer())
         .get(`/user/${user.id + 1}`)
+        .set('Authorization', `Bearer ${token}`)
         .expect(404);
+    });
+
+    it('should return currently signed in user', async () => {
+      const user = await userTestService.create();
+      const token = await getAccessToken(app, user.email);
+
+      const response = await supertest(app.getHttpServer())
+        .get(`/user/profile`)
+        .set('Authorization', `Bearer ${token}`)
+        .expect(200);
+
+      const result = response.body as UserDto;
+      expect(result.email).toBe(user.email);
     });
   });
 
@@ -71,10 +93,12 @@ describe('/user', () => {
         firstName: 'Lara',
         lastName: 'Croft',
       } as UpdateUserRequest;
+      const token = await getAccessToken(app, user.email);
 
       const response = await supertest(app.getHttpServer())
         .put(`/user/${user.id}`)
         .send(request)
+        .set('Authorization', `Bearer ${token}`)
         .expect(200);
 
       const result = response.body as UserDto;
@@ -87,10 +111,12 @@ describe('/user', () => {
       const request = {
         lastName: 'Croft',
       } as UpdateUserRequest;
+      const token = await getAccessToken(app, user.email);
 
       const response = await supertest(app.getHttpServer())
         .put(`/user/${user.id}`)
         .send(request)
+        .set('Authorization', `Bearer ${token}`)
         .expect(200);
 
       const result = response.body as UserDto;
@@ -100,10 +126,12 @@ describe('/user', () => {
 
     it('should remove the first and last name of the user', async () => {
       const user = await userTestService.create();
+      const token = await getAccessToken(app, user.email);
 
       const response = await supertest(app.getHttpServer())
         .put(`/user/${user.id}`)
         .send({})
+        .set('Authorization', `Bearer ${token}`)
         .expect(200);
       const result = response.body as UserDto;
       expect(result.firstName).toBeUndefined();
@@ -112,9 +140,12 @@ describe('/user', () => {
 
     it('should throw an error when the user ID does not exist', async () => {
       const user = await userTestService.create();
+      const token = await getAccessToken(app, user.email);
+
       await supertest(app.getHttpServer())
         .put(`/user/${user.id + 1}`)
         .send({})
+        .set('Authorization', `Bearer ${token}`)
         .expect(404);
     });
   });
@@ -122,15 +153,21 @@ describe('/user', () => {
   describe('DELETE /user', () => {
     it('should delete a user', async () => {
       const user = await userTestService.create();
+      const token = await getAccessToken(app, user.email);
+
       await supertest(app.getHttpServer())
         .delete(`/user/${user.id}`)
+        .set('Authorization', `Bearer ${token}`)
         .expect(200);
     });
 
     it('should throw an error when the user ID does not exist', async () => {
       const user = await userTestService.create();
+      const token = await getAccessToken(app, user.email);
+
       await supertest(app.getHttpServer())
         .delete(`/user/${user.id + 1}`)
+        .set('Authorization', `Bearer ${token}`)
         .expect(404);
     });
   });

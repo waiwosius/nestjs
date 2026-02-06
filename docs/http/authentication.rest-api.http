@@ -1,0 +1,19 @@
+### Create a new user
+POST {{url}}/authentication/sign-up
+Content-Type:application/json
+
+{
+  "firstName": "Bobby",
+  "lastName": "Ross",
+  "email": "bob@ross8.com",
+  "password": "12345678"
+}
+
+### Sign In user
+POST {{url}}/authentication/sign-in
+Content-Type:application/json
+
+{
+  "email": "bob@ross6.com",
+  "password": "12345678"
+}

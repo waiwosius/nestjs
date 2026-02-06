@@ -45,7 +45,6 @@ describe('/authentication', () => {
         const response = await supertest(app.getHttpServer())
           .post('/authentication/sign-up')
           .send(request)
-          .auth('mock token', { type: 'bearer' })
           .expect(201);
 
         const result = response.body as AuthenticationDto;
@@ -68,7 +67,6 @@ describe('/authentication', () => {
         const response = await supertest(app.getHttpServer())
           .post('/authentication/sign-up')
           .send(request)
-          .auth('mock token', { type: 'bearer' })
           .expect(201);
 
         const result = response.body as AuthenticationDto;
@@ -92,7 +90,6 @@ describe('/authentication', () => {
         await supertest(app.getHttpServer())
           .post('/authentication/sign-up')
           .send(request)
-          .auth('mock token', { type: 'bearer' })
           .expect(400);
       });
 
@@ -107,7 +104,6 @@ describe('/authentication', () => {
         await supertest(app.getHttpServer())
           .post('/authentication/sign-up')
           .send(request)
-          .auth('mock token', { type: 'bearer' })
           .expect(400);
       });
     });
@@ -123,12 +119,11 @@ describe('/authentication', () => {
         const response = await supertest(app.getHttpServer())
           .post('/authentication/sign-in')
           .send(request)
-          .auth('mock token', { type: 'bearer' })
           .expect(200);
 
         const result = response.body as AuthenticationDto;
-
         expect(result.accessToken).toBeDefined();
+
         const signInUser = result.user;
         expect(signInUser.id).toBe(user.id);
         expect(signInUser.firstName).toBe(user.firstName);
@@ -147,7 +142,6 @@ describe('/authentication', () => {
         await supertest(app.getHttpServer())
           .post('/authentication/sign-in')
           .send(request)
-          .auth('mock token', { type: 'bearer' })
           .expect(400);
       });
     });

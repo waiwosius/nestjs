@@ -1,0 +1,25 @@
+### Get current user profile
+GET http://localhost:3000/user/profile
+Authorization: Bearer {{accessToken}}
+
+### Get all users
+GET http://localhost:3000/user
+Authorization: Bearer {{accessToken}}
+
+### Get user by ID
+GET http://localhost:3000/user/8
+Authorization: Bearer {{accessToken}}
+
+### Update user
+PUT http://localhost:3000/user/8
+Content-Type:application/json
+Authorization: Bearer {{accessToken}}
+
+{
+  "firstName": "Bob",
+  "lastName": "Ross"
+}
+
+### Delete user
+DELETE http://localhost:3000/user/8
+Authorization: Bearer {{accessToken}}
