@@ -1,27 +1,17 @@
-import { INestApplication, ValidationPipe } from '@nestjs/common';
-import { Test } from '@nestjs/testing';
-import { AppModule } from '../../src/app.module';
+import { INestApplication } from '@nestjs/common';
+import { TestingModule } from '@nestjs/testing';
 import { CreateUserRequest } from '../../src/modules/user/requests/create-user.request';
 import supertest from 'supertest';
 import { User } from '../../src/modules/user/user.entity';
+import { getMainModule } from '../app';
 
 describe('/user', () => {
   let app: INestApplication;
+  let module: TestingModule;
 
   beforeAll(async () => {
-    const moduleFixture = await Test.createTestingModule({
-      imports: [AppModule],
-    }).compile();
-
-    app = moduleFixture.createNestApplication();
-
-    app.useGlobalPipes(
-      new ValidationPipe({
-        whitelist: true,
-        transform: true,
-        forbidNonWhitelisted: true,
-      }),
-    );
+    module = await getMainModule();
+    app = module.createNestApplication();
 
     await app.init();
   });
@@ -31,7 +21,7 @@ describe('/user', () => {
   });
 
   describe('POST /user', () => {
-    it('POST /user should return a user', async () => {
+    it('should return a user', async () => {
       const request = {
         firstName: 'Lara',
         lastName: 'Croft',
@@ -50,7 +40,7 @@ describe('/user', () => {
       expect(result.email).toBe(request.email);
     });
 
-    it('POST /user should return a user then firstName and lastName is not provided', async () => {
+    it('should return a user then firstName and lastName is not provided', async () => {
       const request = {
         email: 'lara@croft.com',
         password: 's3cr3tPass',
@@ -67,7 +57,7 @@ describe('/user', () => {
       expect(result.email).toBe(request.email);
     });
 
-    it('POST /user throw error when an email is not provided', async () => {
+    it('throw error when an email is not provided', async () => {
       const request = {
         firstName: 'Lara',
         lastName: 'Croft',
@@ -80,7 +70,7 @@ describe('/user', () => {
         .expect(400);
     });
 
-    it('POST /user throw error when password is too short', async () => {
+    it('throw error when password is too short', async () => {
       const request = {
         firstName: 'Lara',
         lastName: 'Croft',
