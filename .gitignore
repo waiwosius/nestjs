@@ -1,0 +1,9 @@
+# Editor
+.idea
+
+# Modules
+node_modules
+
+# Local
+.env
+dist
