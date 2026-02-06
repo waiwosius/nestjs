@@ -16,7 +16,6 @@ import { User } from './user.entity';
 import { Roles } from '../../decorators/roles.decorator';
 import { UserRole } from './user-role.enum';
 import { RolesGuard } from '../../guards/roles.guard';
-import { PublicUserDto } from './public-user.dto';
 import { UserDto } from './user.dto';
 import { Serialize } from '../../interceptors/serialize.interceptor';
 import { UserSearchRepository } from './user-search.repository';
@@ -51,7 +50,7 @@ export class UserController {
     };
   }
 
-  @Serialize(PublicUserDto)
+  @Serialize(UserDto)
   @Get('/profile')
   async getProfile(@CurrentUser() user: User) {
     return await this.userService.findOneOrFail(user.id);

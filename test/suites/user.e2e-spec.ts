@@ -8,7 +8,6 @@ import { UserTestService } from '../services/user-test.service';
 import { UpdateUserRequest } from '../../src/modules/user/requests/update-user.request';
 import { getAccessToken } from '../test-utils';
 import { UserRole } from '../../src/modules/user/user-role.enum';
-import { PublicUserDto } from '../../src/modules/user/public-user.dto';
 import { PageDto } from '../../src/dtos/page.dto';
 
 describe('/user', () => {
@@ -111,7 +110,7 @@ describe('/user', () => {
         .set('Authorization', `Bearer ${token}`)
         .expect(200);
 
-      const result = response.body as PublicUserDto;
+      const result = response.body as UserDto;
       expect(result.email).toBe(user.email);
     });
   });

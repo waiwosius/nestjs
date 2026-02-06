@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { Injectable, UnauthorizedException } from '@nestjs/common';
 import crypto from 'crypto';
 import { JwtService } from '@nestjs/jwt';
 
@@ -26,7 +26,7 @@ export class AuthenticationService {
     );
 
     if (!isEqual) {
-      throw new BadRequestException('Wrong password');
+      throw new UnauthorizedException('Wrong password');
     }
     return true;
   }

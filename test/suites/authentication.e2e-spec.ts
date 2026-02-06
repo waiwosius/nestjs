@@ -120,7 +120,7 @@ describe('/authentication', () => {
         await supertest(app.getHttpServer())
           .post('/authentication/sign-in')
           .send(request)
-          .expect(400);
+          .expect(401);
       });
     });
   });
