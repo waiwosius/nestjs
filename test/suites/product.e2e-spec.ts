@@ -118,6 +118,7 @@ describe('/product', () => {
         title: 'New Product',
         description: 'New Product description',
         number: '123b',
+        categoryIds: [],
       } as ProductRequest;
 
       const token = await getAccessToken(app, user.email);
@@ -140,6 +141,7 @@ describe('/product', () => {
         title: 'New Product',
         description: 'New Product description',
         number: '123b',
+        categoryIds: [],
       } as ProductRequest;
 
       const token = await getAccessToken(app, user.email);
@@ -159,6 +161,7 @@ describe('/product', () => {
         title: 'Updated Product',
         description: 'Updated Product description',
         number: product.number,
+        categoryIds: [],
       } as ProductRequest;
 
       const token = await getAccessToken(app, user.email);
@@ -197,6 +200,7 @@ describe('/product', () => {
         title: 'Updated Product',
         description: 'Updated Product description',
         number: product.number,
+        categoryIds: [],
       } as ProductRequest;
 
       const token = await getAccessToken(app, user.email);

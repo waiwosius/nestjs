@@ -7,9 +7,16 @@ import { AuthenticationModule } from '../authentication/authentication.module';
 import { ProductRepository } from './product.repository';
 import { ProductSearchRepository } from './product-search.repository';
 import { PublicProductController } from './public-product.controller';
+import { CategoryModule } from '../category/category.module';
+import { ProductCategoryModule } from '../product-category/product-category.module';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Product]), AuthenticationModule],
+  imports: [
+    TypeOrmModule.forFeature([Product]),
+    AuthenticationModule,
+    CategoryModule,
+    ProductCategoryModule,
+  ],
   providers: [ProductService, ProductSearchRepository, ProductRepository],
   controllers: [ProductController, PublicProductController],
 })

@@ -170,9 +170,7 @@ describe('/category', () => {
       const category = await categoryTestService.create();
       const request = {
         title: 'Updated Category',
-        description: 'Updated Category description',
       };
-
       const token = await getAccessToken(app, user.email);
       await supertest(app.getHttpServer())
         .put(`/category/${category.id}`)

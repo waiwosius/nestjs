@@ -4,10 +4,9 @@ Content-Type:application/json
 Authorization: Bearer {{accessToken}}
 
 {
-  "title": "Category 2",
+  "title": "Second category-long long long long",
   "description": "Second level category",
-  "order": 2,
-  "parentId": 1
+  "parentId": 4
 }
 
 ### Get all categories
@@ -15,11 +14,11 @@ GET {{url}}/category
 Authorization: Bearer {{accessToken}}
 
 ### Get category by ID
-GET {{url}}/category/3
+GET {{url}}/category/5
 Authorization: Bearer {{accessToken}}
 
 ### Update a category
-PUT {{url}}/category/3
+PUT {{url}}/category/5
 Content-Type:application/json
 Authorization: Bearer {{accessToken}}
 
@@ -31,5 +30,5 @@ Authorization: Bearer {{accessToken}}
 }
 
 ### Delete a category
-DELETE {{url}}/category/1
+DELETE {{url}}/category/3
 Authorization: Bearer {{accessToken}}

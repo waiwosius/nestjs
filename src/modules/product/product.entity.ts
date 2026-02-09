@@ -1,4 +1,12 @@
-import { Column, Entity, ManyToMany, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Column,
+  CreateDateColumn,
+  Entity,
+  JoinTable,
+  ManyToMany,
+  PrimaryGeneratedColumn,
+  UpdateDateColumn,
+} from 'typeorm';
 import { Category } from '../category/category.entity';
 
 @Entity()
@@ -6,10 +14,10 @@ export class Product {
   @PrimaryGeneratedColumn({ name: 'id' })
   private _id: number;
 
-  @Column({ name: 'created_date' })
+  @CreateDateColumn({ name: 'created_date' })
   private _createdDate: Date;
 
-  @Column({ name: 'updated_date' })
+  @UpdateDateColumn({ name: 'updated_date' })
   private _updatedDate: Date;
 
   @Column({ name: 'title', nullable: true })
@@ -22,7 +30,8 @@ export class Product {
   private _number: string;
 
   @ManyToMany(() => Category, (category) => category.products)
-  categories: Category[];
+  @JoinTable({ name: 'product_category' })
+  private _categories: Category[];
 
   get id(): number {
     return this._id;
@@ -36,6 +45,10 @@ export class Product {
     return this._updatedDate;
   }
 
+  get number(): string {
+    return this._number;
+  }
+
   get title(): string {
     return this._title;
   }
@@ -44,8 +57,8 @@ export class Product {
     return this._description;
   }
 
-  get number(): string {
-    return this._number;
+  get categories(): Category[] {
+    return this._categories ? [...this._categories] : [];
   }
 
   setTitle(title: string) {
@@ -60,6 +73,11 @@ export class Product {
 
   setNumber(number: string) {
     this._number = number;
+    return this;
+  }
+
+  setCategories(categories: Category[]) {
+    this._categories = categories;
     return this;
   }
 }

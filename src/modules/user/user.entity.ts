@@ -49,9 +49,11 @@ export class User {
   get updatedDate(): Date {
     return this._updatedDate;
   }
+
   get firstName(): string {
     return this._firstName;
   }
+
   get lastName(): string {
     return this._lastName;
   }

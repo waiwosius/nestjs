@@ -10,5 +10,6 @@ import { AuthenticationModule } from '../authentication/authentication.module';
   imports: [TypeOrmModule.forFeature([Category]), AuthenticationModule],
   providers: [CategoryService, CategoryRepository],
   controllers: [CategoryController],
+  exports: [CategoryService],
 })
 export class CategoryModule {}

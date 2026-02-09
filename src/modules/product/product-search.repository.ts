@@ -18,7 +18,7 @@ export class ProductSearchRepository
     return queryBuilder
       .take(limit)
       .skip(offset)
-      .orderBy('product.created_date')
+      .orderBy(`created_date`)
       .getManyAndCount();
   }
 
@@ -28,7 +28,7 @@ export class ProductSearchRepository
   ) {
     if (!search) return;
 
-    queryBuilder.andWhere('product.title LIKE :search', {
+    queryBuilder.andWhere(`title LIKE :search`, {
       search: `%${search}%`,
     });
   }

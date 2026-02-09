@@ -1,4 +1,4 @@
-import { QueryRunner, Repository } from 'typeorm';
+import { FindOptionsWhere, QueryRunner, Repository } from 'typeorm';
 
 export abstract class AbstractRepositoryService<T> {
   protected constructor(
@@ -18,6 +18,13 @@ export abstract class AbstractRepositoryService<T> {
       .getOne();
   }
 
+  findByIds(ids: number[]) {
+    return this.repository
+      .createQueryBuilder(this.alias)
+      .where('id IN (:...ids)', { ids })
+      .getMany();
+  }
+
   save(entity: T) {
     return this.repository.save(entity);
   }
@@ -28,5 +35,11 @@ export abstract class AbstractRepositoryService<T> {
 
   createQueryBuilder(queryRunner?: QueryRunner) {
     return this.repository.createQueryBuilder(this.alias, queryRunner);
+  }
+
+  existsBy(
+    where: FindOptionsWhere<T> | FindOptionsWhere<T>[],
+  ): Promise<boolean> {
+    return this.repository.existsBy(where);
   }
 }

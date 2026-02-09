@@ -22,6 +22,11 @@ export abstract class AbstractEntityService<T> {
     return entity;
   }
 
+  async findByIds(ids: number[]): Promise<T[]> {
+    if (!ids || ids.length === 0) return [];
+    return await this.repository.findByIds(ids);
+  }
+
   async delete(id: number) {
     const result = await this.repository.delete(id);
     if (result.affected === 0) {

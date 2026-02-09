@@ -1,4 +1,5 @@
-import { IsNotEmpty, IsString } from 'class-validator';
+import { IsArray, IsNotEmpty, IsNumber, IsString } from 'class-validator';
+import { Type } from 'class-transformer';
 
 export class ProductRequest {
   @IsString()
@@ -12,4 +13,9 @@ export class ProductRequest {
   @IsString()
   @IsNotEmpty()
   number: string;
+
+  @Type(() => Number)
+  @IsArray()
+  @IsNumber({}, { each: true })
+  categoryIds: number[];
 }

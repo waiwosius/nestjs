@@ -1,4 +1,14 @@
-import { Body, Controller, Delete, Get, Param, Post, Put, Query, UseGuards, } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Post,
+  Put,
+  Query,
+  UseGuards,
+} from '@nestjs/common';
 import { Roles } from '../../decorators/roles.decorator';
 import { UserRole } from '../user/user-role.enum';
 import { AuthenticationGuard } from '../../guards/authentication.guard';
@@ -10,6 +20,8 @@ import { Serialize } from '../../interceptors/serialize.interceptor';
 import { PageSerialize } from '../../interceptors/page-serialize.interceptor';
 import { ProductSearchRepository } from './product-search.repository';
 import { ProductSearchRequest } from './requests/product-search.request';
+import { CategoryService } from '../category/category.service';
+import { ProductCategoryService } from '../product-category/product-category.service';
 
 @Roles(UserRole.admin)
 @UseGuards(AuthenticationGuard, RolesGuard)
@@ -18,6 +30,8 @@ export class ProductController {
   constructor(
     private readonly productService: ProductService,
     private readonly productSearchRepository: ProductSearchRepository,
+    private readonly categoryService: CategoryService,
+    private readonly productCategoryService: ProductCategoryService,
   ) {}
 
   @PageSerialize(ProductDto)
@@ -41,20 +55,25 @@ export class ProductController {
 
   @Serialize(ProductDto)
   @Get(':id')
-  getOne(@Param('id') productId: number) {
-    return this.productService.findOneOrFail(productId);
+  async getOne(@Param('id') productId: number) {
+    const product = await this.productService.findOneOrFail(productId);
+    const categoriesIds =
+      await this.productCategoryService.findCategoryIdsByProductId(productId);
+    const categories = await this.categoryService.findByIds(categoriesIds);
+
+    return product.setCategories(categories);
   }
 
   @Serialize(ProductDto)
   @Post()
-  create(@Body() body: ProductRequest) {
-    return this.productService.create(body);
+  async create(@Body() body: ProductRequest) {
+    return await this.productService.create(body);
   }
 
   @Serialize(ProductDto)
   @Put(':id')
-  update(@Param('id') productId: number, @Body() body: ProductRequest) {
-    return this.productService.update(productId, body);
+  async update(@Param('id') productId: number, @Body() body: ProductRequest) {
+    return await this.productService.update(productId, body);
   }
 
   @Serialize(ProductDto)

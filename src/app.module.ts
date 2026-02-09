@@ -8,6 +8,7 @@ import { AuthenticationModule } from './modules/authentication/authentication.mo
 import { JwtModule } from '@nestjs/jwt';
 import { ProductModule } from './modules/product/product.module';
 import { CategoryModule } from './modules/category/category.module';
+import { ProductCategoryModule } from './modules/product-category/product-category.module';
 
 @Module({
   imports: [
@@ -22,6 +23,7 @@ import { CategoryModule } from './modules/category/category.module';
     AuthenticationModule,
     ProductModule,
     CategoryModule,
+    ProductCategoryModule,
   ],
   controllers: [],
   providers: [GlobalValidationPipeProvider],

@@ -1,5 +1,6 @@
 import {
   Column,
+  CreateDateColumn,
   Entity,
   JoinColumn,
   JoinTable,
@@ -7,6 +8,7 @@ import {
   ManyToOne,
   OneToMany,
   PrimaryGeneratedColumn,
+  UpdateDateColumn,
 } from 'typeorm';
 import { Product } from '../product/product.entity';
 
@@ -15,10 +17,10 @@ export class Category {
   @PrimaryGeneratedColumn({ name: 'id' })
   private _id: number;
 
-  @Column({ name: 'created_date' })
+  @CreateDateColumn({ name: 'created_date' })
   private _createdDate: Date;
 
-  @Column({ name: 'updated_date' })
+  @UpdateDateColumn({ name: 'updated_date' })
   private _updatedDate: Date;
 
   @Column({ name: 'title', nullable: true })
@@ -34,18 +36,39 @@ export class Category {
   private _parentId: number;
 
   @ManyToOne(() => Category, (category) => category.children)
-  @JoinColumn({ name: 'parent_id' })
-  parent: Category;
+  @JoinColumn({ name: 'parent_id', referencedColumnName: '_id' })
+  private _parent: Category;
 
   @OneToMany(() => Category, (category) => category.parent)
-  children: Category[];
+  @JoinColumn({ name: 'parent_id', referencedColumnName: '_id' })
+  private _children: Category[];
 
   @ManyToMany(() => Product, (product) => product.categories, { cascade: true })
   @JoinTable({ name: 'product_category' })
-  products: Product[];
+  private _products: Product[];
 
   get id(): number {
     return this._id;
+  }
+
+  get parentId(): number {
+    return this._parentId;
+  }
+
+  get parent(): Category {
+    return this._parent;
+  }
+
+  get children(): Category[] {
+    return this._children ? [...this._children] : [];
+  }
+
+  get products(): Product[] {
+    return this._products ? [...this._products] : [];
+  }
+
+  get order(): number {
+    return this._order;
   }
 
   get title(): string {
@@ -54,14 +77,6 @@ export class Category {
 
   get description(): string {
     return this._description;
-  }
-
-  get order(): number {
-    return this._order;
-  }
-
-  get parentId(): number {
-    return this._parentId;
   }
 
   setTitle(title: string) {

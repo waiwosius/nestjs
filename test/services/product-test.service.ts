@@ -16,12 +16,14 @@ export class ProductTestService implements TestServiceInterface {
       title = 'Test Product',
       description = 'Long Test Product description',
       number = 'a1b1',
+      categories,
     } = params;
 
     return new Product()
       .setTitle(title)
       .setDescription(description)
-      .setNumber(number);
+      .setNumber(number)
+      .setCategories(categories);
   }
 
   repository() {

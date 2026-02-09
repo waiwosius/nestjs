@@ -10,7 +10,7 @@ export class CategoryRequest {
   description: string;
 
   @IsNumber()
-  @IsNotEmpty()
+  @IsOptional()
   order: number;
 
   @IsNumber()

@@ -14,13 +14,8 @@ export class CategoryService extends AbstractEntityService<Category> {
     return this.categoryRepository.findAll();
   }
 
-  create(request: CategoryRequest) {
+  async create(request: CategoryRequest) {
     const { title, description, order, parentId } = request;
-
-    const parent = this.categoryRepository.findById(parentId);
-    if (!parent) {
-      throw new BadRequestException(`Parent category was not found`);
-    }
 
     return this.categoryRepository.save(
       new Category()
@@ -35,17 +30,12 @@ export class CategoryService extends AbstractEntityService<Category> {
     const category = await this.findOneOrFail(categoryId);
     const { title, description, order, parentId } = request;
 
-    const parent = this.categoryRepository.findById(parentId);
-    if (!parent) {
-      throw new BadRequestException(`Parent category was not found`);
-    }
-
     return await this.categoryRepository.save(
       category
         .setTitle(title)
         .setDescription(description)
         .setOrder(order)
-        .setParentId(parentId),
+        .setParentId(parentId ?? null),
     );
   }
 

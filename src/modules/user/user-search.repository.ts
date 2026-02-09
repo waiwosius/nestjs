@@ -18,7 +18,7 @@ export class UserSearchRepository
     return queryBuilder
       .take(limit)
       .skip(offset)
-      .orderBy('user.created_date')
+      .orderBy('created_date')
       .getManyAndCount();
   }
 
@@ -28,7 +28,7 @@ export class UserSearchRepository
   ) {
     if (!search) return;
 
-    queryBuilder.andWhere('user.first_name LIKE :search', {
+    queryBuilder.andWhere('first_name LIKE :search', {
       search: `%${search}%`,
     });
   }

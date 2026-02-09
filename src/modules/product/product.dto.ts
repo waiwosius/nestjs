@@ -1,4 +1,5 @@
-import { Expose } from 'class-transformer';
+import { Expose, Type } from 'class-transformer';
+import { CategoryDto } from '../category/category.dto';
 
 export class ProductDto {
   @Expose()
@@ -12,4 +13,8 @@ export class ProductDto {
 
   @Expose()
   number: string;
+
+  @Expose()
+  @Type(() => CategoryDto)
+  categories: CategoryDto[];
 }
