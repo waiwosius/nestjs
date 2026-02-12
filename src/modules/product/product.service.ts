@@ -4,6 +4,7 @@ import { Product } from './product.entity';
 import { ProductRepository } from './product.repository';
 import { AbstractEntityService } from '../../common/abstract-entity.service';
 import { CategoryService } from '../category/category.service';
+import { Category } from '../category/category.entity';
 
 @Injectable()
 export class ProductService extends AbstractEntityService<Product> {
@@ -15,24 +16,26 @@ export class ProductService extends AbstractEntityService<Product> {
   }
 
   async create(request: ProductRequest) {
-    const { title, description, number, categoryIds } = request;
-    const categories = await this.categoryService.findByIds(categoryIds);
-
-    return this.productRepository.save(
-      new Product()
-        .setTitle(title)
-        .setDescription(description)
-        .setNumber(number)
-        .setCategories(categories),
+    const categories = await this.categoryService.findByIds(
+      request.categoryIds,
     );
+    return this.save(new Product(), request, categories);
   }
 
   async update(productId: number, request: ProductRequest) {
-    const product = await this.findOneOrFail(productId);
-    const { title, description, number, categoryIds } = request;
-    const categories = await this.categoryService.findByIds(categoryIds);
+    const [product, categories] = await Promise.all([
+      this.findOneOrFail(productId),
+      this.categoryService.findByIds(request.categoryIds),
+    ]);
+    return this.save(product, request, categories);
+  }
 
-    return await this.productRepository.save(
+  private save(
+    product: Product,
+    { title, description, number }: ProductRequest,
+    categories: Category[],
+  ) {
+    return this.productRepository.save(
       product
         .setNumber(number)
         .setTitle(title)

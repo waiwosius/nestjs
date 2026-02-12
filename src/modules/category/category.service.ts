@@ -14,29 +14,13 @@ export class CategoryService extends AbstractEntityService<Category> {
     return this.categoryRepository.findAll();
   }
 
-  async create(request: CategoryRequest) {
-    const { title, description, order, parentId } = request;
-
-    return this.categoryRepository.save(
-      new Category()
-        .setTitle(title)
-        .setDescription(description)
-        .setOrder(order)
-        .setParentId(parentId),
-    );
+  create(request: CategoryRequest) {
+    return this.save(new Category(), request);
   }
 
   async update(categoryId: number, request: CategoryRequest) {
     const category = await this.findOneOrFail(categoryId);
-    const { title, description, order, parentId } = request;
-
-    return await this.categoryRepository.save(
-      category
-        .setTitle(title)
-        .setDescription(description)
-        .setOrder(order)
-        .setParentId(parentId ?? null),
-    );
+    return this.save(category, request);
   }
 
   async delete(id: number) {
@@ -46,5 +30,18 @@ export class CategoryService extends AbstractEntityService<Category> {
     }
 
     await super.delete(id);
+  }
+
+  private save(
+    category: Category,
+    { parentId, order, title, description }: CategoryRequest,
+  ) {
+    return this.categoryRepository.save(
+      category
+        .setParentId(parentId || null)
+        .setOrder(order)
+        .setTitle(title)
+        .setDescription(description),
+    );
   }
 }
