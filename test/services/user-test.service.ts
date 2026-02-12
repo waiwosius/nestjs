@@ -18,7 +18,7 @@ export class UserTestService implements TestServiceInterface {
       lastName = 'Croft',
       email = 'lara@croft.com',
       //password: 'p@$$w0rd'
-      password = '567fb3927bbc7421a4c83b3cd825a773.f2b0e1a852331dff676e097154355cb563a54e51dd1bd7ebdd29eb2490b2d6463b6f8a20aeb5d5c2304b23d45522c494a964c76d33bbffc74447c9bd78f6dbe9',
+      password = '$argon2id$v=19$m=65536,t=3,p=4$BEpXwW15WEjtiitlcurSJw$Mw4hlmCSLVWAylQHXRZHzUHtht1K8r33y4sfTgJV6Co',
       role = UserRole.admin,
     } = params;
 

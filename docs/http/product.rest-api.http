@@ -6,7 +6,10 @@ Authorization: Bearer {{accessToken}}
 {
   "title": "Product 6",
   "description": "Product 6 - best product in the market",
-  "number": "1251"
+  "number": "1251",
+  "categoryIds": [
+    5
+  ]
 }
 
 ### Search product
@@ -23,9 +26,12 @@ Content-Type:application/json
 Authorization: Bearer {{accessToken}}
 
 {
-  "title": "Product 1.1",
-  "description": "Product 1.1 - best product in the market",
-  "number": "18"
+  "title": "book",
+  "description": "Damaged book",
+  "number": "1",
+  "categoryIds": [
+    5
+  ]
 }
 
 ### Delete a product

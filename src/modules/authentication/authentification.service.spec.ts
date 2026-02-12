@@ -2,6 +2,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { JwtService } from '@nestjs/jwt';
 import { AuthenticationService } from './authentication.service';
 import { UnauthorizedException } from '@nestjs/common';
+import * as argon2 from 'argon2';
 
 describe('AuthenticationService', () => {
   let service: AuthenticationService;
@@ -25,62 +26,53 @@ describe('AuthenticationService', () => {
   });
 
   describe('createPassword', () => {
-    it('should return a string in the format salt.hash', () => {
-      const result = service.createPassword('p@$$w0rd');
+    it('should return an Argon2 hash string', async () => {
+      const password = 's3cr3t';
+      const result = await service.createPassword(password);
 
-      const parts = result.split('.');
-      expect(parts).toHaveLength(2);
-
-      const [salt, hash] = parts;
-      // Salt length: 16 bytes * 2 (hex) = 32 chars
-      expect(salt).toHaveLength(32);
-      // Hash length: keylen (64 bytes) * 2 (hex) = 128 chars
-      expect(hash).toHaveLength(64 * 2);
+      expect(typeof result).toBe('string');
+      expect(result).toMatch(/^\$argon2/);
     });
 
-    it('should generate unique salts', () => {
+    it('should generate hashes (random salts) for the same password', async () => {
       const password = 'p@$$w0rd';
-      const result1 = service.createPassword(password);
-      const result2 = service.createPassword(password);
+      const hash1 = await service.createPassword(password);
+      const hash2 = await service.createPassword(password);
 
-      const [salt1] = result1.split('.');
-      const [salt2] = result2.split('.');
-
-      expect(salt1).not.toBe(salt2);
+      expect(hash1).not.toEqual(hash2);
     });
   });
 
   describe('validatePassword', () => {
-    it('should return true if the password is correct', async () => {
-      const password = 'p@$$w0rd';
-      const passwordValue = service.createPassword(password);
+    it('should resolve if the password is correct', async () => {
+      const password = 's3cr3t';
+      const validHash = await argon2.hash(password);
 
-      const isValid = await service.validatePassword(password, passwordValue);
-      expect(isValid).toBe(true);
+      await expect(
+        service.validatePassword(password, validHash),
+      ).resolves.not.toThrow();
     });
 
     it('should throw an error when password is wrong', async () => {
       const password = 'p@$$w0rd';
-      const passwordValue = service.createPassword(password);
+      const validHash = await argon2.hash(password);
 
       await expect(
-        service.validatePassword('wrongPassword', passwordValue),
+        service.validatePassword('wrongPassword', validHash),
       ).rejects.toThrow(UnauthorizedException);
     });
-  });
 
-  describe('createAccessToken', () => {
-    it('should create access token', async () => {
-      const userId = 42;
+    describe('createAccessToken', () => {
+      it('should create access token', async () => {
+        const userId = 42;
+        const result = await service.createAccessToken(userId);
 
-      const result = await service.createAccessToken(userId);
-
-      expect(jwtService.signAsync).toHaveBeenCalledTimes(1);
-      expect(jwtService.signAsync).toHaveBeenCalledWith({
-        userId,
+        expect(jwtService.signAsync).toHaveBeenCalledTimes(1);
+        expect(jwtService.signAsync).toHaveBeenCalledWith({
+          userId,
+        });
+        expect(result).toBe('mocked-jwt-token');
       });
-
-      expect(result).toBe('mocked-jwt-token');
     });
   });
 });
