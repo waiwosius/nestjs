@@ -5,6 +5,7 @@ import {
   Delete,
   Get,
   Param,
+  Patch,
   Post,
   Put,
   UseGuards,
@@ -52,5 +53,18 @@ export class CategoryController {
     const category = await this.categoryService.findOneOrFail(categoryId);
 
     await this.categoryService.delete(category.id);
+  }
+
+  @Patch(':firstId/change-order/:secondId')
+  async changeOrder(
+    @Param('firstId') firstId: number,
+    @Param('secondId') secondId: number,
+  ) {
+    const [firstCategory, secondCategory] = await Promise.all([
+      this.categoryService.findOneOrFail(firstId),
+      this.categoryService.findOneOrFail(secondId),
+    ]);
+
+    await this.categoryService.changeOrder(firstCategory, secondCategory);
   }
 }

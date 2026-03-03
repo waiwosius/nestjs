@@ -221,4 +221,46 @@ describe('/category', () => {
         .expect(404);
     });
   });
+
+  describe('PATCH /category/:firstId/change-order/:secondId', () => {
+    it('should be able to change order', async () => {
+      const user = await userTestService.create();
+      const firstParent = await categoryTestService.create();
+      const secondParent = await categoryTestService.create();
+      const firstCategory = await categoryTestService.create({
+        parentId: firstParent.id,
+        order: 1,
+      });
+      const secondCategory = await categoryTestService.create({
+        parentId: secondParent.id,
+        order: 2,
+      });
+
+      const token = await getAccessToken(app, user.email);
+      await supertest(app.getHttpServer())
+        .patch(
+          `/category/${firstCategory.id}/change-order/${secondCategory.id}`,
+        )
+        .set('Authorization', `Bearer ${token}`)
+        .expect(200);
+
+      const firstCategoryResult = await categoryTestService
+        .repository()
+        .createQueryBuilder('category')
+        .where('id = :id', { id: firstCategory.id })
+        .getOne();
+
+      expect(firstCategoryResult.parentId).toBe(secondParent.id);
+      expect(firstCategoryResult.order).toBe(2);
+
+      const secondCategoryResult = await categoryTestService
+        .repository()
+        .createQueryBuilder('category')
+        .where('id = :id', { id: secondCategory.id })
+        .getOne();
+
+      expect(secondCategoryResult.parentId).toBe(secondParent.id);
+      expect(secondCategoryResult.order).toBe(1);
+    });
+  });
 });

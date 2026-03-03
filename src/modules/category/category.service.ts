@@ -14,6 +14,21 @@ export class CategoryService extends AbstractEntityService<Category> {
     return this.categoryRepository.findAll();
   }
 
+  async changeOrder(firstCategory: Category, secondCategory: Category) {
+    const originalFirstCategoryOrder = firstCategory.order;
+
+    await Promise.all([
+      this.categoryRepository.save(
+        firstCategory
+          .setOrder(secondCategory.order)
+          .setParentId(secondCategory.parentId),
+      ),
+      this.categoryRepository.save(
+        secondCategory.setOrder(originalFirstCategoryOrder),
+      ),
+    ]);
+  }
+
   create(request: CategoryRequest) {
     return this.save(new Category(), request);
   }
